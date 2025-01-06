@@ -5,7 +5,6 @@ import torch.nn.functional as F
 from models.wider_resnet import wresnet ,Efficientnet_1024,Efficientnet_X3D
 from models.basic_modules import ConvBnRelu, ConvTransposeBnRelu, initialize_weights
 from grouped_query_attention_pytorch.attention import MultiheadGQA
-from models.QGAttention import Attention_QGA,MultiheadGQAConv
 from models.Quantizer import Quantizer
 import separableconv.nn as ns
 import math
