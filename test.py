@@ -9,7 +9,7 @@ import numpy as np
 import Datasets
 from utils import train_util, log_util, anomaly_util
 from config.defaults import _C as config, update_config
-from models.model_avenue_85 import ASTNet as get_net1
+from models.wresnet1024_cattn_tsm import ASTNet as get_net1
 from models.wresnet2048_multiscale_cattn_tsmplus_layer6 import ASTNet as get_net2
 import time
 
