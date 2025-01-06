@@ -6,7 +6,6 @@ from models.wider_resnet import wresnet ,Efficientnet_1024,Efficientnet_X3D
 from models.basic_modules import ConvBnRelu, ConvTransposeBnRelu, initialize_weights
 from grouped_query_attention_pytorch.attention import MultiheadGQA
 from models.Quantizer import Quantizer
-import separableconv.nn as ns
 import math
 
 logger = logging.getLogger(__name__)
