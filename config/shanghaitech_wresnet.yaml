@@ -5,7 +5,7 @@ PRINT_FREQ: 100
 DATASET:
   DATASET: shanghaitech
   ROOT: '/content/astnet/ASTNet/datasets'
-  NUM_FRAMES: 7
+  NUM_FRAMES: 5
   FRAME_STEPS: 5
   LOWER_BOUND: 100
 
@@ -15,7 +15,7 @@ TRAIN:
   BEGIN_EPOCH: 0
   END_EPOCH: 100
   RESUME: true
-  OPTIMIZER: 'adam'
+  OPTIMIZER: 'lion'
   LR_TYPE: 'multistep'
   LR: 0.0002
   LR_STEP: [40, 70, 90]
@@ -30,8 +30,8 @@ MODEL:
   IMAGE_SIZE:
     - 192
     - 288
-  MEMORY_SIZE: 7
-  ENCODED_FRAMES: 6
+  MEMORY_SIZE: 5
+  ENCODED_FRAMES: 4
   DECODED_FRAMES: 0
   EXTRA:
     FINAL_CONV_KERNEL: 3
