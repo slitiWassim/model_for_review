@@ -6,6 +6,7 @@ import sys
 import numpy as np
 import torch
 import torch.nn as nn 
+from torch.nn.parallel import DistributedDataParallel as DDP
 from test import inference
 from config.defaults import _C as config, update_config
 from utils import train_util, log_util, loss_util, optimizer_util, anomaly_util
@@ -62,7 +63,8 @@ def main():
 
     gpus = list(config.GPUS)
     print(gpus)
-    model = nn.DataParallel(model, device_ids=gpus).cuda()
+    #model = nn.DataParallel(model, device_ids=gpus).cuda()
+    model = DDP(model, device_ids=gpus).cuda()
     if(args.resume_train):
       state_dict = torch.load(args.model_file)
       if 'state_dict' in state_dict.keys():
