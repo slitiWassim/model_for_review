@@ -6,7 +6,6 @@ import sys
 import numpy as np
 import torch
 import torch.nn as nn 
-from torch.nn.parallel import DistributedDataParallel as DDP
 from test import inference
 from config.defaults import _C as config, update_config
 from utils import train_util, log_util, loss_util, optimizer_util, anomaly_util
@@ -62,10 +61,7 @@ def main():
     logger.info('Model: {}'.format(model.get_name()))
 
     gpus = list(config.GPUS)
-    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(gpus)
-    model = nn.DataParallel(model, device_ids=gpus).to(device)
-    #model = DDP(model, device_ids=gpus).cuda()
+    model = nn.DataParallel(model, device_ids=gpus).cuda()
     if(args.resume_train):
       state_dict = torch.load(args.model_file)
       if 'state_dict' in state_dict.keys():
@@ -73,7 +69,7 @@ def main():
         model.load_state_dict(state_dict)
       else:
         model.module.load_state_dict(state_dict)
-    losses = loss_util.MultiLossFunction(config=config).to(device)
+    losses = loss_util.MultiLossFunction(config=config).cuda()
 
     optimizer = optimizer_util.get_optimizer(config, model)
 
@@ -118,9 +114,9 @@ def main():
         AUC_memory=0.0
     for epoch in range(last_epoch, config.TRAIN.END_EPOCH):
         if(args.pseudo):
-          train_pseudo(config, train_loader,train_loader_jump, model, losses, optimizer,device, epoch, logger,pseudolossepoch, pseudolosscounter,args)
+          train_pseudo(config, train_loader,train_loader_jump, model, losses, optimizer, epoch, logger,pseudolossepoch, pseudolosscounter,args)
         else:
-          train(config, train_loader, model, losses, optimizer,device, epoch, logger,args)
+          train(config, train_loader, model, losses, optimizer, epoch, logger,args)
 
         scheduler.step()
 
@@ -132,7 +128,7 @@ def main():
         if (epoch % 10 ==0) and ( args.output_folder != None):
             torch.save(model.module.state_dict(), os.path.join(args.output_folder,
                                                                'epoch_train_{}.pth'.format(epoch + 1)))
-        if(args.test)and(epoch > 5):
+        if(args.test)and(epoch > 10):
             mat=anomaly_util.get_labels(config.DATASET.DATASET)
             psnr_list , fps = inference(config, test_loader, model,args,quit=True)
             assert len(psnr_list) == len(mat), f'Ground truth has {len(mat)} videos, BUT got {len(psnr_list)} detected videos!'
@@ -156,7 +152,7 @@ def main():
 
 
 
-def train(config, train_loader, model, loss_functions, optimizer,device, epoch, logger,args):
+def train(config, train_loader, model, loss_functions, optimizer, epoch, logger,args):
     loss_func_mse = nn.MSELoss(reduction='none')
 
     model.train()
@@ -165,11 +161,11 @@ def train(config, train_loader, model, loss_functions, optimizer,device, epoch, 
         # decode input
         
         inputs,target = train_util.decode_input(input=data, train=True)
-        inputs = [input.to(device) for input in inputs]
+        inputs = [input.cuda() for input in inputs]
         output,loss_commit = model.module.compute_loss(inputs)
 
         # compute loss
-        target = target.to(device)
+        target = target.cuda(non_blocking=True)
         inte_loss, grad_loss, msssim_loss, l2_loss = loss_functions(output, target)
         loss = inte_loss + grad_loss + msssim_loss + l2_loss + loss_commit
 
@@ -193,7 +189,7 @@ def train(config, train_loader, model, loss_functions, optimizer,device, epoch, 
                                              psnr=psnr)
             logger.info(msg)
 
-def train_pseudo(config, train_loader,train_loader_jump, model, loss_functions, optimizer,device, epoch, logger,pseudolossepoch, pseudolosscounter,args):
+def train_pseudo(config, train_loader,train_loader_jump, model, loss_functions, optimizer, epoch, logger,pseudolossepoch, pseudolosscounter,args):
     loss_func_mse = nn.MSELoss(reduction='none')
 
     model.train()
@@ -239,15 +235,15 @@ def train_pseudo(config, train_loader,train_loader_jump, model, loss_functions, 
             cls_labels.append(0)
           else:
             cls_labels.append(1)
-        cls_labels = torch.Tensor(cls_labels).unsqueeze(1).to(device)
+        cls_labels = torch.Tensor(cls_labels).unsqueeze(1).cuda()
         
         # Frame Data 
         inputs=train_util.To_Frame(inputs_batch,config.TRAIN.BATCH_SIZE_PER_GPU * len(list(config.GPUS)),config.MODEL.ENCODED_FRAMES)
-        inputs = [input.to(device) for input in inputs]
+        inputs = [input.cuda() for input in inputs]
         output,loss_commit_ = model.module.compute_loss(inputs)
 
         #target=To_Frame(target_batch,config.TRAIN.BATCH_SIZE_PER_GPU * len(list(config.GPUS)),config.MODEL.ENCODED_FRAMES)
-        target = target.to(device)
+        target = target.cuda(non_blocking=True)
        # inferance 
       
         
