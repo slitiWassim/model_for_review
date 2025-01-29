@@ -62,8 +62,9 @@ def main():
     logger.info('Model: {}'.format(model.get_name()))
 
     gpus = list(config.GPUS)
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(gpus)
-    model = nn.DataParallel(model, device_ids=gpus).cuda()
+    model = nn.DataParallel(model, device_ids=gpus).to(device)
     #model = DDP(model, device_ids=gpus).cuda()
     if(args.resume_train):
       state_dict = torch.load(args.model_file)
