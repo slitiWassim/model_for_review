@@ -73,7 +73,7 @@ def main():
         model.load_state_dict(state_dict)
       else:
         model.module.load_state_dict(state_dict)
-    losses = loss_util.MultiLossFunction(config=config).cuda()
+    losses = loss_util.MultiLossFunction(config=config).to(device)
 
     optimizer = optimizer_util.get_optimizer(config, model)
 
@@ -165,11 +165,11 @@ def train(config, train_loader, model, loss_functions, optimizer, epoch, logger,
         # decode input
         
         inputs,target = train_util.decode_input(input=data, train=True)
-        inputs = [input.cuda() for input in inputs]
+        inputs = [input.to(device) for input in inputs]
         output,loss_commit = model.module.compute_loss(inputs)
 
         # compute loss
-        target = target.cuda(non_blocking=True)
+        target = target.to(device)
         inte_loss, grad_loss, msssim_loss, l2_loss = loss_functions(output, target)
         loss = inte_loss + grad_loss + msssim_loss + l2_loss + loss_commit
 
@@ -239,15 +239,15 @@ def train_pseudo(config, train_loader,train_loader_jump, model, loss_functions, 
             cls_labels.append(0)
           else:
             cls_labels.append(1)
-        cls_labels = torch.Tensor(cls_labels).unsqueeze(1).cuda()
+        cls_labels = torch.Tensor(cls_labels).unsqueeze(1).to(device)
         
         # Frame Data 
         inputs=train_util.To_Frame(inputs_batch,config.TRAIN.BATCH_SIZE_PER_GPU * len(list(config.GPUS)),config.MODEL.ENCODED_FRAMES)
-        inputs = [input.cuda() for input in inputs]
+        inputs = [input.to(device) for input in inputs]
         output,loss_commit_ = model.module.compute_loss(inputs)
 
         #target=To_Frame(target_batch,config.TRAIN.BATCH_SIZE_PER_GPU * len(list(config.GPUS)),config.MODEL.ENCODED_FRAMES)
-        target = target.cuda(non_blocking=True)
+        target = target.to(device)
        # inferance 
       
         
