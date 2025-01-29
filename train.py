@@ -63,7 +63,6 @@ def main():
     gpus = list(config.GPUS)
     print(gpus)
     model = nn.DataParallel(model, device_ids=gpus).cuda()
-    print(model)
     if(args.resume_train):
       state_dict = torch.load(args.model_file)
       if 'state_dict' in state_dict.keys():
