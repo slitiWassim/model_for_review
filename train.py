@@ -118,9 +118,9 @@ def main():
         AUC_memory=0.0
     for epoch in range(last_epoch, config.TRAIN.END_EPOCH):
         if(args.pseudo):
-          train_pseudo(config, train_loader,train_loader_jump, model, losses, optimizer, epoch, logger,pseudolossepoch, pseudolosscounter,args)
+          train_pseudo(config, train_loader,train_loader_jump, model, losses, optimizer,device, epoch, logger,pseudolossepoch, pseudolosscounter,args)
         else:
-          train(config, train_loader, model, losses, optimizer, epoch, logger,args)
+          train(config, train_loader, model, losses, optimizer,device, epoch, logger,args)
 
         scheduler.step()
 
@@ -156,7 +156,7 @@ def main():
 
 
 
-def train(config, train_loader, model, loss_functions, optimizer, epoch, logger,args):
+def train(config, train_loader, model, loss_functions, optimizer,device, epoch, logger,args):
     loss_func_mse = nn.MSELoss(reduction='none')
 
     model.train()
@@ -193,7 +193,7 @@ def train(config, train_loader, model, loss_functions, optimizer, epoch, logger,
                                              psnr=psnr)
             logger.info(msg)
 
-def train_pseudo(config, train_loader,train_loader_jump, model, loss_functions, optimizer, epoch, logger,pseudolossepoch, pseudolosscounter,args):
+def train_pseudo(config, train_loader,train_loader_jump, model, loss_functions, optimizer,device, epoch, logger,pseudolossepoch, pseudolosscounter,args):
     loss_func_mse = nn.MSELoss(reduction='none')
 
     model.train()
