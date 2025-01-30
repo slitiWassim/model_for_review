@@ -221,8 +221,8 @@ def train_pseudo(config, train_loader,train_loader_jump, model, loss_functions, 
           # skip frame pseudo anomaly
           #pseudo_anomaly_jump = total_pseudo_prob <= rand_number < total_pseudo_prob + args.pseudo_anomaly_jump
           #total_pseudo_prob += args.pseudo_anomaly_jump
-          pseudo_anomaly_jump = total_pseudo_prob <= rand_number < total_pseudo_prob + 0.01
-          total_pseudo_prob += 0.01
+          pseudo_anomaly_jump = total_pseudo_prob <= rand_number < total_pseudo_prob + 0.015
+          total_pseudo_prob += 0.015
           if pseudo_anomaly_jump:
             inputs_batch[b] = inputs_batch_jump[b]
             target[b] = target_jump[b]
