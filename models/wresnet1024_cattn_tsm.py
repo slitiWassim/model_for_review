@@ -9,7 +9,7 @@ from models.Quantizer import Quantizer
 import math
 
 logger = logging.getLogger(__name__)
-embedding_dim = 128
+embedding_dim = 192
 
 
 class ASTNet(nn.Module):
@@ -51,7 +51,7 @@ class ASTNet(nn.Module):
         
         
         # Quantization Layer
-        self.vq = Quantizer(channels[3],codebook_size =128,Quantizer_name='ResidualVQ')
+        self.vq = Quantizer(channels[3],codebook_size =256,Quantizer_name='ResidualVQ')
         
 
         
