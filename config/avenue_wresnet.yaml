@@ -15,9 +15,9 @@ TRAIN:
   BEGIN_EPOCH: 0
   END_EPOCH: 120
   RESUME: true
-  OPTIMIZER: 'lion'
+  OPTIMIZER: 'adam'
   LR_TYPE: 'multistep'
-  LR: 0.00002
+  LR: 0.0002
   LR_STEP: [80,100]
 
 TEST:
