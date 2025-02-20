@@ -145,7 +145,7 @@ class ASTNet(nn.Module):
 
         ## Apply Quantization to the Encoder output
         x8 =self._pre_vq_conv(x8)
-        x8 , _ =self.vq(x8)    # During training, retrieve the _loss_commit to optimize the model.
+        #x8 , _ =self.vq(x8)    # During training, retrieve the _loss_commit to optimize the model.
         #x2 , _loss_commit2 =self.vq2(x2) # During training, retrieve the _loss_commit to optimize the model.
         #x0 , _loss_commit0 =self.vq0(x0) # During training, retrieve the _loss_commit to optimize the model.
 
@@ -208,7 +208,7 @@ class ASTNet(nn.Module):
         
         ## Apply Quantization to the Encoder output
         x8 = self._pre_vq_conv(x8)
-        x8 , _loss_commit =self.vq(x8) # During training, retrieve the _loss_commit to optimize the model.
+        #x8 , _loss_commit =self.vq(x8) # During training, retrieve the _loss_commit to optimize the model.
         #x2 , _loss_commit2 =self.vq2(x2) # During training, retrieve the _loss_commit to optimize the model.
         #x0 , _loss_commit0 =self.vq0(x0) # During training, retrieve the _loss_commit to optimize the model.
 
@@ -231,10 +231,10 @@ class ASTNet(nn.Module):
         
         ''' --- End of Decoder Part --- '''
 
-        loss_commit = self._commitment_cost * _loss_commit 
+        #loss_commit = self._commitment_cost * _loss_commit 
 
         
-        return self.final(x) ,loss_commit
+        return self.final(x) ,0
     
 
 class ConvSwiGLU(nn.Module):
