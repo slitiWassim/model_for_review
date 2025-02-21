@@ -276,8 +276,8 @@ def train_pseudo(config, train_loader,train_loader_jump, model, loss_functions, 
         grad_loss=torch.mean(torch.stack(modified_grad_loss))
         msssim_loss=torch.mean(torch.stack(modified_msssim_loss))
         l2_loss=torch.mean(torch.stack(modified_l2_loss))
-        #loss_commit=torch.mean(torch.stack(modified_loss_commit))
-        loss_commit = 0
+        loss_commit=torch.mean(torch.stack(modified_loss_commit))
+        #loss_commit = 0
 
         # compute loss
         loss =  inte_loss + grad_loss +  msssim_loss +  2*l2_loss  + loss_commit
