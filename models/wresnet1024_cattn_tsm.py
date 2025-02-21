@@ -25,7 +25,7 @@ class ASTNet(nn.Module):
         self.model_name = config.MODEL.NAME
         logger.info('=> ' + self.model_name + '_1024: (CATTN + TSM) - Ped2')
         self.batch=config.TRAIN.BATCH_SIZE_PER_GPU
-        self._commitment_cost = 0.25
+        self._commitment_cost = 0.5
 
         channels = [192,96,48,24]
         
