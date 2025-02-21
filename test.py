@@ -5,6 +5,7 @@ import os
 import torch
 import torch.nn as nn
 import torch.backends.cudnn as cudnn
+import matplotlib.pyplot as plt
 import numpy as np
 import Datasets
 from utils import train_util, log_util, anomaly_util
@@ -86,6 +87,10 @@ def main():
     assert len(psnr_list) == len(mat), f'Ground truth has {len(mat)} videos, BUT got {len(psnr_list)} detected videos!'
 
     auc, fpr, tpr = anomaly_util.calculate_auc(config, psnr_list, mat)
+    np.save('fpr.npy', fpr)
+    np.save('tpr.npy', tpr)
+    
+    
 
     logger.info(f'AUC: {auc * 100:.1f}%  FPS : {fps} ')
 
