@@ -231,10 +231,10 @@ class ASTNet(nn.Module):
         
         ''' --- End of Decoder Part --- '''
 
-        #loss_commit = self._commitment_cost * _loss_commit 
+        loss_commit = self._commitment_cost * _loss_commit 
 
         
-        return self.final(x) ,0
+        return self.final(x) ,loss_commit
     
 
 class ConvSwiGLU(nn.Module):
