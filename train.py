@@ -128,7 +128,7 @@ def main():
         if (epoch % 10 ==0) and ( args.output_folder != None):
             torch.save(model.module.state_dict(), os.path.join(args.output_folder,
                                                                'epoch_train_{}.pth'.format(epoch + 1)))
-        if(args.test)and(epoch > 10):
+        if(args.test)and(epoch > 5):
             mat=anomaly_util.get_labels(config.DATASET.DATASET)
             psnr_list , fps = inference(config, test_loader, model,args,quit=True)
             assert len(psnr_list) == len(mat), f'Ground truth has {len(mat)} videos, BUT got {len(psnr_list)} detected videos!'
